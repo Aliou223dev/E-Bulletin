@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { FileText, Shield, Users, Smartphone } from "lucide-react";
+import { Link } from "react-router-dom";
 import heroBackground from "@/assets/hero-background.jpg";
 
 export const HeroSection = () => {
@@ -36,17 +37,23 @@ export const HeroSection = () => {
               variant="hero" 
               size="lg" 
               className="text-lg px-8 py-6 animate-bounce-subtle"
+              asChild
             >
-              <FileText className="mr-2 h-5 w-5" />
-              Demander l'accès
+              <Link to="/demande-adhesion">
+                <FileText className="mr-2 h-5 w-5" />
+                Demander l'accès
+              </Link>
             </Button>
             <Button 
               variant="outline" 
               size="lg" 
               className="text-lg px-8 py-6 bg-white/10 border-white/30 text-white hover:bg-white/20"
+              asChild
             >
-              <Users className="mr-2 h-5 w-5" />
-              Espace Gestionnaire
+              <Link to="/login">
+                <Users className="mr-2 h-5 w-5" />
+                Espace Gestionnaire
+              </Link>
             </Button>
           </div>
 

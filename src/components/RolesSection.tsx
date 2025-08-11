@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { User, Users, Shield, FileText, Printer, Settings, CheckCircle, UserPlus } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const RolesSection = () => {
   const roles = [
@@ -90,11 +91,14 @@ export const RolesSection = () => {
                   <Button 
                     variant={role.variant} 
                     className="w-full mt-6 gap-2"
+                    asChild
                   >
-                    {index === 0 && <UserPlus className="h-4 w-4" />}
-                    {index === 1 && <Users className="h-4 w-4" />}
-                    {index === 2 && <Settings className="h-4 w-4" />}
-                    {role.action}
+                    <Link to={index === 0 ? "/demande-adhesion" : "/login"}>
+                      {index === 0 && <UserPlus className="h-4 w-4" />}
+                      {index === 1 && <Users className="h-4 w-4" />}
+                      {index === 2 && <Settings className="h-4 w-4" />}
+                      {role.action}
+                    </Link>
                   </Button>
                 </CardContent>
               </Card>
