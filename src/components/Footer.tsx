@@ -13,11 +13,11 @@ export const Footer = () => {
             <div className="flex items-center space-x-3 mb-4">
               <img 
                 src={governmentEmblem} 
-                alt="République Française" 
+                alt="République du Mali" 
                 className="h-10 w-10 object-contain filter brightness-0 invert"
               />
               <div>
-                <h3 className="text-lg font-bold">Bulletins de Paie</h3>
+                <h3 className="text-lg font-bold">E-Bulletin</h3>
                 <p className="text-sm opacity-80">Service numérique de l'État</p>
               </div>
             </div>
@@ -27,7 +27,7 @@ export const Footer = () => {
             </p>
             <div className="flex items-center gap-4 text-sm">
               <span className="opacity-80">Développé par :</span>
-              <span className="font-semibold">Direction Numérique de l'État</span>
+              <span className="font-semibold">Direction Numérique du Mali</span>
             </div>
           </div>
 
@@ -68,17 +68,17 @@ export const Footer = () => {
             <div className="space-y-3 text-sm">
               <div className="flex items-center gap-2 opacity-80">
                 <Mail className="h-4 w-4" />
-                <span>support.bulletins@gouv.fr</span>
+                <span>support.e-bulletin@gouv.ml</span>
               </div>
               <div className="flex items-center gap-2 opacity-80">
                 <Phone className="h-4 w-4" />
-                <span>01 23 45 67 89</span>
+                <span>+223 20 21 22 23</span>
               </div>
               <div className="flex items-start gap-2 opacity-80">
                 <MapPin className="h-4 w-4 mt-0.5" />
                 <span className="leading-relaxed">
                   Direction Numérique<br />
-                  75015 Paris, France
+                  Bamako, Mali
                 </span>
               </div>
             </div>
@@ -90,14 +90,14 @@ export const Footer = () => {
         {/* Copyright et mentions */}
         <div className="flex flex-col md:flex-row justify-between items-center text-sm opacity-80">
           <div className="mb-4 md:mb-0">
-            <p>&copy; 2024 République Française. Tous droits réservés.</p>
+            <p>&copy; 2024 République du Mali. Tous droits réservés.</p>
           </div>
           <div className="flex items-center gap-6">
             <span>Version 1.0</span>
             <span>•</span>
-            <span>Hébergé en France</span>
+            <span>Hébergé au Mali</span>
             <span>•</span>
-            <span>Certifié SecNumCloud</span>
+            <span>Sécurisé et Certifié</span>
           </div>
         </div>
       </div>

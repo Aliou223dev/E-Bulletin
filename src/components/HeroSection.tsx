@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { FileText, Shield, Users, Smartphone } from "lucide-react";
 import { Link } from "react-router-dom";
-import heroBackground from "@/assets/hero-background.jpg";
+import maliGovernmentBuilding from "@/assets/mali-government-building.jpg";
 
 export const HeroSection = () => {
   return (
@@ -9,8 +9,8 @@ export const HeroSection = () => {
       {/* Background avec overlay */}
       <div className="absolute inset-0 z-0">
         <img 
-          src={heroBackground} 
-          alt="Bâtiment gouvernemental français"
+          src={maliGovernmentBuilding} 
+          alt="Bâtiment gouvernemental malien"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-primary/80" />

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, FileText, LogIn, UserPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 import governmentEmblem from "@/assets/government-emblem.png";
 
 export const Header = () => {
@@ -15,15 +16,15 @@ export const Header = () => {
           <div className="flex items-center space-x-3">
             <img 
               src={governmentEmblem} 
-              alt="République Française" 
+              alt="République du Mali" 
               className="h-10 w-10 object-contain"
             />
             <div className="flex flex-col">
               <span className="text-lg font-bold text-primary">
-                Bulletins de Paie
+                E-Bulletin
               </span>
               <span className="text-xs text-muted-foreground">
-                Service de l'État
+                République du Mali
               </span>
             </div>
           </div>
@@ -33,23 +34,21 @@ export const Header = () => {
             <a href="#fonctionnalites" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
               Fonctionnalités
             </a>
-            <a href="#roles" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-              Rôles
-            </a>
-            <a href="#securite" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-              Sécurité
-            </a>
           </nav>
 
           {/* Boutons d'action */}
           <div className="hidden md:flex items-center space-x-3">
-            <Button variant="ghost" className="gap-2">
-              <LogIn className="h-4 w-4" />
-              Se connecter
+            <Button variant="ghost" className="gap-2" asChild>
+              <Link to="/login">
+                <LogIn className="h-4 w-4" />
+                Se connecter
+              </Link>
             </Button>
-            <Button variant="government" className="gap-2">
-              <UserPlus className="h-4 w-4" />
-              Demande d'adhésion
+            <Button variant="government" className="gap-2" asChild>
+              <Link to="/demande-adhesion">
+                <UserPlus className="h-4 w-4" />
+                Demande d'adhésion
+              </Link>
             </Button>
           </div>
 
@@ -74,20 +73,18 @@ export const Header = () => {
               <a href="#fonctionnalites" className="px-3 py-2 text-sm font-medium hover:bg-accent rounded-md">
                 Fonctionnalités
               </a>
-              <a href="#roles" className="px-3 py-2 text-sm font-medium hover:bg-accent rounded-md">
-                Rôles
-              </a>
-              <a href="#securite" className="px-3 py-2 text-sm font-medium hover:bg-accent rounded-md">
-                Sécurité
-              </a>
               <div className="pt-3 border-t flex flex-col space-y-2">
-                <Button variant="ghost" className="justify-start gap-2">
-                  <LogIn className="h-4 w-4" />
-                  Se connecter
+                <Button variant="ghost" className="justify-start gap-2" asChild>
+                  <Link to="/login">
+                    <LogIn className="h-4 w-4" />
+                    Se connecter
+                  </Link>
                 </Button>
-                <Button variant="government" className="justify-start gap-2">
-                  <UserPlus className="h-4 w-4" />
-                  Demande d'adhésion
+                <Button variant="government" className="justify-start gap-2" asChild>
+                  <Link to="/demande-adhesion">
+                    <UserPlus className="h-4 w-4" />
+                    Demande d'adhésion
+                  </Link>
                 </Button>
               </div>
             </nav>
