@@ -6,18 +6,64 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LogIn, UserPlus, Shield, Users } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "../hooks/use-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useNavigate } from "react-router-dom";
+import { register } from "module";
+const loginSchema = z.object({
+  email: z.string().email({
+    message: "Veuillez entrer une adresse email valide.",
+  }),
+  password: z.string().min(6, {
+    message: "Le mot de passe doit contenir au moins 6 caractères.",
+  }),
+  rememberMe: z.boolean().default(false).optional(),
+});
 
-export default function Login() {
-  const [loginData, setLoginData] = useState({
-    email: "",
-    password: ""
+const Login = () => {
+  const { login, isLoadingAuth } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+  const navigate = useNavigate();
+ 
+  //const { theme } = useTheme();
+
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      rememberMe: false,
+    },
   });
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Implement login logic
-    console.log("Login attempt:", loginData);
-  };
+  async function onSubmit(values: z.infer<typeof loginSchema>) {
+    setIsSubmitting(true);
+    try {
+      await login({
+        email: values.email,
+        password: values.password,
+        role:"AGENT"
+      });
+      setIsSubmitting(true);
+      toast({
+        title: "Connexion réussie",
+        description: "Vous êtes maintenant connecté à votre compte.",
+      });
+      navigate("/");
+    } catch (error) {
+      console.error("Login error:", error);
+      toast({
+        variant: "destructive",
+        title: "Erreur de connexion",
+        description: "Email ou mot de passe incorrect.",
+      });
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-subtle flex items-center justify-center p-4">
@@ -57,15 +103,16 @@ export default function Login() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleLogin} className="space-y-4">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="agent-email">Email</Label>
                     <Input
                       id="agent-email"
                       type="email"
                       placeholder="votre.email@gov.ml"
-                      value={loginData.email}
-                      onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                      autoComplete="email"
+                      {...form.register("email")}
+                      disabled={isLoadingAuth}
                       required
                     />
                   </div>
@@ -74,14 +121,25 @@ export default function Login() {
                     <Input
                       id="agent-password"
                       type="password"
-                      value={loginData.password}
-                      onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                      placeholder="••••••••"
+                      autoComplete="password"
+                      {...form.register("password")}
+                      disabled={isLoadingAuth}
                       required
                     />
                   </div>
-                  <Button type="submit" className="w-full" variant="government">
-                    <LogIn className="h-4 w-4 mr-2" />
-                    Se connecter
+                  <Button type="submit" className="w-full" variant="government" disabled={isSubmitting}>
+                    {isSubmitting ? (
+                      <>
+                        <LogIn className="mr-2 h-4 w-4 animate-spin" />
+                        Connexion en cours...
+                      </>
+                    ) : (
+                      <>
+                        <LogIn className="mr-2 h-4 w-4" />
+                        Connexion
+                      </>
+                    )}
                   </Button>
                 </form>
                 <div className="mt-4 text-center">
@@ -105,16 +163,17 @@ export default function Login() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleLogin} className="space-y-4">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="gest-email">Email</Label>
                     <Input
                       id="gest-email"
                       type="email"
                       placeholder="gestionnaire@gov.ml"
-                      value={loginData.email}
-                      onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                      autoComplete="email"
+                      {...form.register("email")}
                       required
+                      disabled={isLoadingAuth}
                     />
                   </div>
                   <div className="space-y-2">
@@ -122,14 +181,25 @@ export default function Login() {
                     <Input
                       id="gest-password"
                       type="password"
-                      value={loginData.password}
-                      onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                      placeholder="••••••••"
+                      disabled={isLoadingAuth}
+                      {...form.register("password")}
+                      autoComplete="password"
                       required
                     />
                   </div>
-                  <Button type="submit" className="w-full">
-                    <LogIn className="h-4 w-4 mr-2" />
-                    Se connecter
+                  <Button type="submit" className="w-full" disabled={isSubmitting}>
+                    {isSubmitting ? (
+                      <>
+                        <LogIn className="mr-2 h-4 w-4 animate-spin" />
+                        Connexion en cours...
+                      </>
+                    ) : (
+                      <>
+                        <LogIn className="mr-2 h-4 w-4" />
+                        Connexion
+                      </>
+                    )}
                   </Button>
                 </form>
               </CardContent>
@@ -148,15 +218,16 @@ export default function Login() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleLogin} className="space-y-4">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="admin-email">Email</Label>
                     <Input
                       id="admin-email"
                       type="email"
                       placeholder="admin@gov.ml"
-                      value={loginData.email}
-                      onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                      autoComplete="email"
+                       {...form.register("email")} 
+                      disabled={isLoadingAuth}
                       required
                     />
                   </div>
@@ -164,15 +235,26 @@ export default function Login() {
                     <Label htmlFor="admin-password">Mot de passe</Label>
                     <Input
                       id="admin-password"
+                       placeholder="••••••••"
                       type="password"
-                      value={loginData.password}
-                      onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                      autoComplete="password"
+                      {...form.register("password")}
+                      disabled={isLoadingAuth}
                       required
                     />
                   </div>
-                  <Button type="submit" className="w-full" variant="secondary">
-                    <LogIn className="h-4 w-4 mr-2" />
-                    Se connecter
+                  <Button type="submit" className="w-full"  disabled={isSubmitting}>
+                    {isSubmitting ? (
+                      <>
+                        <LogIn className="mr-2 h-4 w-4 animate-spin" />
+                        Connexion en cours...
+                      </>
+                    ) : (
+                      <>
+                        <LogIn className="mr-2 h-4 w-4" />
+                        Connexion
+                      </>
+                    )}
                   </Button>
                 </form>
               </CardContent>
@@ -189,3 +271,4 @@ export default function Login() {
     </div>
   );
 }
+export default Login;

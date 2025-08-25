@@ -7,11 +7,17 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { FileText, Download, User, Calendar, Eye, LogOut, Printer, Search, Users } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function DashboardGestionnaire() {
   const [selectedYear, setSelectedYear] = useState("2024");
   const [selectedMonth, setSelectedMonth] = useState("");
+  const { toast } = useToast();
+   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
+   const { currentUser, logout } = useAuth();
 
   // Mock data
   const gestionnaire = {
@@ -38,7 +44,19 @@ export default function DashboardGestionnaire() {
     agent.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
     agent.matricule.includes(searchTerm)
   );
-
+const handleLogout = async () => {
+    try {
+      logout();
+      navigate('/login');
+      toast({ title: "Déconnexion réussie" });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Échec de la déconnexion"
+      });
+    }
+  };
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -46,10 +64,10 @@ export default function DashboardGestionnaire() {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold">Espace Gestionnaire</h1>
-            <p className="text-white/80">Bienvenue, {gestionnaire.nom}</p>
-            <p className="text-white/60 text-sm">{gestionnaire.secteur}</p>
+            <p className="text-white/80">Bienvenue, {currentUser?.username}</p>
+            <p className="text-white/60 text-sm">{currentUser?.role}</p>
           </div>
-          <Button variant="ghost" className="text-white hover:bg-white/20" asChild>
+          <Button onClick={handleLogout} variant="ghost" className="text-white hover:bg-white/20" asChild>
             <Link to="/">
               <LogOut className="h-4 w-4 mr-2" />
               Déconnexion
@@ -63,24 +81,24 @@ export default function DashboardGestionnaire() {
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="bulletins">
               <FileText className="h-4 w-4 mr-2" />
-              Mes Bulletins
+              Les Bulletins
             </TabsTrigger>
             <TabsTrigger value="equipe">
               <Users className="h-4 w-4 mr-2" />
               Mon Équipe
             </TabsTrigger>
-            <TabsTrigger value="profil">
+            {/* <TabsTrigger value="profil">
               <User className="h-4 w-4 mr-2" />
               Mon Profil
-            </TabsTrigger>
+            </TabsTrigger> */}
           </TabsList>
 
           <TabsContent value="bulletins" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Mes Bulletins de Paie</CardTitle>
+                <CardTitle>Bulletins de Paie</CardTitle>
                 <CardDescription>
-                  Consultation de vos propres bulletins
+                  Consultation des bulletins de paie des agents de votre secteur
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -106,7 +124,7 @@ export default function DashboardGestionnaire() {
                         <SelectValue placeholder="Tous les mois" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Tous les mois</SelectItem>
+                        <SelectItem value="00">Tous les mois</SelectItem>
                         <SelectItem value="01">Janvier</SelectItem>
                         <SelectItem value="02">Février</SelectItem>
                         <SelectItem value="03">Mars</SelectItem>
@@ -223,7 +241,7 @@ export default function DashboardGestionnaire() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="profil" className="space-y-6">
+          {/* <TabsContent value="profil" className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>Informations Personnelles</CardTitle>
@@ -254,7 +272,7 @@ export default function DashboardGestionnaire() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+          </TabsContent> */}
         </Tabs>
       </div>
     </div>

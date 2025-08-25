@@ -33,16 +33,7 @@ export const FeaturesSection = () => {
       title: "Sécurité Renforcée",
       description: "Authentification forte et chiffrement des données sensibles."
     },
-    {
-      icon: Monitor,
-      title: "Interface Responsive",
-      description: "Optimisé pour tous les appareils : ordinateur, tablette, smartphone."
-    },
-    {
-      icon: Database,
-      title: "Données Fiables",
-      description: "Synchronisation automatique avec les systèmes RH de l'administration."
-    }
+    
   ];
 
   return (
@@ -58,7 +49,7 @@ export const FeaturesSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => {
             const IconComponent = feature.icon;
             return (

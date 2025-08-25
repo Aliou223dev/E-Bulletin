@@ -6,29 +6,59 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { UserPlus, Calendar, Phone, Mail, CreditCard, Hash } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { useAdhesion } from "@/contexts/AdhesionContext";
+import { Adhesion } from "@/types/adhesion";
+import { AdhesionStatus } from "@/types/adhesion";
 
 export default function DemandeAdhesion() {
   const { toast } = useToast();
+  const {sendAdhesion}= useAdhesion()
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
-    matricule: "",
-    prenom: "",
-    nom: "",
-    dateNaissance: "",
-    telephone: "",
-    email: "",
-    numeroNina: ""
+       name:"",
+       surname:"",
+       matricule:"",
+       nina:"",
+       phone:"",
+       birthDate:"",
+       email:"",
+       
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Implement submission logic
-    console.log("Demande d'adhésion:", formData);
-    
-    toast({
-      title: "Demande envoyée",
-      description: "Votre demande d'adhésion a été transmise avec succès. Vous recevrez une réponse par email.",
-    });
-  };
+ const handleSubmit = async (e: React.FormEvent) => {
+     e.preventDefault();
+    setIsSubmitting(true)
+     
+     try {
+       await sendAdhesion({
+         ...formData,
+         adhesionStatus: "PENDING", // Valeur par défaut
+         id: "" // Généré côté serveur
+       });
+ 
+       toast({
+         title: "Demande envoyée",
+         description: "Votre demande a été envoyée, vous recevrez un mail dès qu'elle sera traitée"
+       });
+       setIsSubmitting(false);
+       // Reset form
+       setFormData({
+          name:"",
+          surname:"",
+          matricule:"",
+          nina:"",
+          phone:"",
+          birthDate:"",
+          email:"",
+       });
+     } catch (error) {
+       toast({
+         title: "Erreur",
+         description: "L'envoie de la demande a echouée",
+         variant: "destructive"
+       });
+     }
+   };
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -73,52 +103,52 @@ export default function DemandeAdhesion() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="prenom">Prénom</Label>
+                  <Label htmlFor="name">Prénom</Label>
                   <Input
-                    id="prenom"
+                    id="name"
                     placeholder="Votre prénom"
-                    value={formData.prenom}
-                    onChange={(e) => handleInputChange("prenom", e.target.value)}
+                    value={formData.name}
+                    onChange={(e) => handleInputChange("name", e.target.value)}
                     required
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="nom">Nom</Label>
+                  <Label htmlFor="surname">Nom</Label>
                   <Input
-                    id="nom"
+                    id="surname"
                     placeholder="Votre nom de famille"
-                    value={formData.nom}
-                    onChange={(e) => handleInputChange("nom", e.target.value)}
+                    value={formData.surname}
+                    onChange={(e) => handleInputChange("surname", e.target.value)}
                     required
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="dateNaissance" className="flex items-center gap-2">
+                  <Label htmlFor="birthDate" className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
                     Date de naissance
                   </Label>
                   <Input
-                    id="dateNaissance"
+                    id="birthDate"
                     type="date"
-                    value={formData.dateNaissance}
-                    onChange={(e) => handleInputChange("dateNaissance", e.target.value)}
+                    value={formData.birthDate}
+                    onChange={(e) => handleInputChange("birthDate", e.target.value)}
                     required
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="telephone" className="flex items-center gap-2">
+                  <Label htmlFor="phone" className="flex items-center gap-2">
                     <Phone className="h-4 w-4" />
                     Numéro de téléphone
                   </Label>
                   <Input
-                    id="telephone"
+                    id="phone"
                     type="tel"
                     placeholder="+223 XX XX XX XX"
-                    value={formData.telephone}
-                    onChange={(e) => handleInputChange("telephone", e.target.value)}
+                    value={formData.phone}
+                    onChange={(e) => handleInputChange("phone", e.target.value)}
                     required
                   />
                 </div>
@@ -140,15 +170,15 @@ export default function DemandeAdhesion() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="numeroNina" className="flex items-center gap-2">
+                <Label htmlFor="nina" className="flex items-center gap-2">
                   <CreditCard className="h-4 w-4" />
                   Numéro NINA
                 </Label>
                 <Input
-                  id="numeroNina"
+                  id="nina"
                   placeholder="Numéro d'identification nationale"
-                  value={formData.numeroNina}
-                  onChange={(e) => handleInputChange("numeroNina", e.target.value)}
+                  value={formData.nina}
+                  onChange={(e) => handleInputChange("nina", e.target.value)}
                   required
                 />
               </div>
@@ -164,9 +194,9 @@ export default function DemandeAdhesion() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button type="submit" className="flex-1" variant="government">
+                <Button type="submit" disabled={isSubmitting} className="flex-1" variant="government">
                   <UserPlus className="h-4 w-4 mr-2" />
-                  Envoyer la demande
+                 {isSubmitting ? "Traitement…" : "Envoyer la demande"} 
                 </Button>
                 <Button type="button" variant="outline" className="flex-1" asChild>
                   <Link to="/login">

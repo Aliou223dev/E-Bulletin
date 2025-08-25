@@ -6,10 +6,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { FileText, Download, User, Calendar, Eye, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function DashboardAgent() {
   const [selectedYear, setSelectedYear] = useState("2024");
   const [selectedMonth, setSelectedMonth] = useState("");
+   const { toast } = useToast();
+     const navigate = useNavigate();
+    const [searchTerm, setSearchTerm] = useState("");
+     const { currentUser, logout } = useAuth();
 
   // Mock data - replace with real data
   const bulletins = [
@@ -25,7 +32,19 @@ export default function DashboardAgent() {
     grade: "Administrateur Civil",
     ministere: "Ministère de l'Éducation Nationale"
   };
-
+const handleLogout = async () => {
+    try {
+      logout();
+      navigate('/login');
+      toast({ title: "Déconnexion réussie" });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Échec de la déconnexion"
+      });
+    }
+  };
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -33,9 +52,9 @@ export default function DashboardAgent() {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold">Espace Agent</h1>
-            <p className="text-white/80">Bienvenue, {agent.nom}</p>
+            <p className="text-white/80">Bienvenue, {currentUser?.username}</p>
           </div>
-          <Button variant="ghost" className="text-white hover:bg-white/20" asChild>
+          <Button onClick={handleLogout} variant="ghost" className="text-white hover:bg-white/20" asChild>
             <Link to="/">
               <LogOut className="h-4 w-4 mr-2" />
               Déconnexion
@@ -88,7 +107,7 @@ export default function DashboardAgent() {
                         <SelectValue placeholder="Tous les mois" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Tous les mois</SelectItem>
+                        <SelectItem value="00">Tous les mois</SelectItem>
                         <SelectItem value="01">Janvier</SelectItem>
                         <SelectItem value="02">Février</SelectItem>
                         <SelectItem value="03">Mars</SelectItem>
@@ -147,7 +166,7 @@ export default function DashboardAgent() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="profil" className="space-y-6">
+          {/* <TabsContent value="profil" className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>Informations Personnelles</CardTitle>
@@ -182,7 +201,7 @@ export default function DashboardAgent() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+          </TabsContent> */}
         </Tabs>
       </div>
     </div>
